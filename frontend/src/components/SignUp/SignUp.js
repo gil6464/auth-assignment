@@ -11,6 +11,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
+import { toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+// minified version is also included
+import "react-toastify/dist/ReactToastify.min.css";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -32,6 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+toast.configure();
 export default function SignUp() {
   const classes = useStyles();
   const [userName, setUserName] = useState("");
@@ -45,24 +51,70 @@ export default function SignUp() {
   const [postalCode, setPostalCode] = useState("");
   const [error, setError] = useState("");
 
+  const notifyUserCreated = () => {
+    toast.success("User Created!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const notifyFieldsRequired = () => {
+    toast.error("All fields are required", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const notifyTaken = () => {
+    toast.error("User Name or email is already in use", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
   const [redirect, setRedirect] = useState(false);
+
   const handleSubmit = async () => {
+    const user = {
+      userName,
+      password,
+      email,
+      company,
+      firstName,
+      lastName,
+      city,
+      country,
+      postalCode,
+    };
+
+    //* Take care all of the fields is submitted
+    if (!Object.keys(user).every(k => user[k])) {
+      setError("All fields are required!");
+      notifyFieldsRequired();
+      return;
+    }
+
     try {
-      const data = await axios.post("http://localhost:8080/signIn/", {
-        user: {
-          userName,
-          password,
-          email,
-          company,
-          firstName,
-          lastName,
-          city,
-          country,
-          postalCode,
-        },
+      const response = await axios.post("http://localhost:8080/signIn/", {
+        user,
       });
       setRedirect(true);
+      notifyUserCreated();
     } catch (error) {
+      console.log(error);
+      notifyTaken();
       setError("User Name or email is already in use, please change");
     }
   };
