@@ -10,7 +10,6 @@ const refreshToken = require("../models/RefreshToken");
 async function login(req, res) {
   const { userName, password } = req.body;
   const loginUser = await user.findOne({ userName });
-
   if (!loginUser) {
     return res.status(403).send("User or password incorrect");
   }
@@ -23,7 +22,7 @@ async function login(req, res) {
   });
   const newRefreshToken = jwt.sign(loginUser.toJSON(), REFRESH_TOKEN_SECRET);
   new refreshToken({ token: newRefreshToken }).save();
-  res.json({ userName, accessToken, newRefreshToken });
+  res.json({ userId: loginUser._id, accessToken, newRefreshToken });
 }
 
 module.exports = login;
