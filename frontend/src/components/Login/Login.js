@@ -1,31 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import SignUp from "../SignUp/SignUp";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Cookies from "js-cookie";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { logIn } from "../../actions";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,7 +50,34 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignInSide() {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
+  const [userName, setUserName] = useState();
+  const [password, setPassword] = useState();
+  const [wrongPassword, setWrongPassword] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+
+  //* If user correct in password and user name, the function set the right cookie and redirect to the right page.
+
+  const login = async () => {
+    try {
+      const { data } = await axios.post("http://localhost:8080/login/", {
+        userName,
+        password,
+      });
+
+      Cookies.set("token", data.accessToken);
+      Cookies.set("refreshToken", data.newRefreshToken);
+      setWrongPassword(false);
+      dispatch(logIn());
+      setRedirect(true);
+    } catch (error) {
+      setWrongPassword("Wrong Password or User Name, Check again!");
+    }
+  };
+  if (redirect) {
+    return <Redirect to="/admin" />;
+  }
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -82,10 +97,11 @@ export default function SignInSide() {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
+              label="User name"
+              name="User name"
               autoComplete="email"
               autoFocus
+              onChange={event => setUserName(event.target.value)}
             />
             <TextField
               variant="outlined"
@@ -97,20 +113,18 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              onChange={event => setPassword(event.target.value)}
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={login}
             >
               Sign In
             </Button>
+            {wrongPassword && <h4>{wrongPassword}</h4>}
             <Grid container>
               <Grid item xs></Grid>
               <Grid item>
@@ -119,9 +133,6 @@ export default function SignInSide() {
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </form>
         </div>
       </Grid>

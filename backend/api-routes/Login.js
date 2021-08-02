@@ -2,7 +2,7 @@ const express = require("express");
 const loginUser = express.Router();
 const login = require("../utils/login");
 
-loginUser.get("/", (req, res) => {
+loginUser.post("/", (req, res) => {
   try {
     login(req, res);
   } catch (error) {
