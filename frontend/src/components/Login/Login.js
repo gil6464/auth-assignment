@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,11 +10,16 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+//* For JWT Cookies
 import Cookies from "js-cookie";
+
 import axios from "axios";
+//* Set the isLoggedIn state with redux;
 import { useSelector, useDispatch } from "react-redux";
-import { logIn } from "../../actions";
-import { Redirect } from "react-router-dom";
+import { logIn, setUserId } from "../../actions";
+
+//* Toastyfi
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
+toast.configure();
 export default function SignInSide() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -60,6 +66,17 @@ export default function SignInSide() {
   //* If user correct in password and user name, the function set the right cookie and redirect to the right page.
 
   const login = async () => {
+    const notifyWrong = () => {
+      toast.error("Wrong Password or user name", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    };
     try {
       const { data } = await axios.post("http://localhost:8080/login/", {
         userName,
@@ -70,9 +87,11 @@ export default function SignInSide() {
       Cookies.set("refreshToken", data.newRefreshToken);
       setWrongPassword(false);
       dispatch(logIn());
+      dispatch(setUserId(data.userId));
       setRedirect(true);
     } catch (error) {
       setWrongPassword("Wrong Password or User Name, Check again!");
+      notifyWrong();
     }
   };
   if (redirect) {
