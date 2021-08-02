@@ -1,4 +1,5 @@
 import React from "react";
+
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -21,10 +22,15 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../../actions";
+
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const handleClickNotification = event => {
@@ -45,20 +51,20 @@ export default function AdminNavbarLinks() {
     }
   };
   const handleCloseProfile = () => {
-    setOpenProfile(null);
+    dispatch(logOut());
   };
   return (
     <div>
       <div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{
-            className: classes.margin + " " + classes.search
+            className: classes.margin + " " + classes.search,
           }}
           inputProps={{
             placeholder: "Search",
             inputProps: {
-              "aria-label": "Search"
-            }
+              "aria-label": "Search",
+            },
           }}
         />
         <Button color="white" aria-label="edit" justIcon round>
@@ -112,7 +118,7 @@ export default function AdminNavbarLinks() {
               id="notification-menu-list-grow"
               style={{
                 transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom"
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
             >
               <Paper>
@@ -187,7 +193,7 @@ export default function AdminNavbarLinks() {
               id="profile-menu-list-grow"
               style={{
                 transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom"
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
             >
               <Paper>
