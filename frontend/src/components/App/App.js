@@ -28,7 +28,7 @@ axios.interceptors.response.use(
     const refreshToken = Cookies.get("refreshToken");
     const errorRequest = error.response;
     if (errorRequest.status !== 303) {
-      return error;
+      return Promise.reject(error);
     }
     const originalRequest = error.config;
     try {
