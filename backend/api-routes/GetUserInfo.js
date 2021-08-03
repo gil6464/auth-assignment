@@ -1,8 +1,10 @@
 const express = require("express");
 const getUserInfo = express.Router();
 const getUserData = require("../utils/GetUserData");
+//* Check if user token is valid
+const { validateToken } = require("../Middlewares");
 
-getUserInfo.get("/", (req, res) => {
+getUserInfo.get("/", validateToken, (req, res) => {
   try {
     getUserData(req, res);
   } catch (error) {
