@@ -3,7 +3,7 @@ const { compare } = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } = process.env;
 const user = require("../models/User");
-const refreshToken = require("../models/RefreshToken");
+const refreshToken = require("../models/refreshToken");
 
 //* This function receive userName + password, and compare the password with bcrypt.
 

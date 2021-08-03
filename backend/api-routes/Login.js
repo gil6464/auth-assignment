@@ -1,6 +1,6 @@
 const express = require("express");
 const loginUser = express.Router();
-const login = require("../utils/login");
+const login = require("../utils/Login");
 
 loginUser.post("/", (req, res) => {
   try {

@@ -1,8 +1,10 @@
 const express = require("express");
 const updateUser = express.Router();
 const updateUserFunc = require("../utils/UpdateUser");
+//* Check if user token is valid
+const { validateToken } = require("../Middlewares");
 
-updateUser.patch("/", (req, res) => {
+updateUser.patch("/", validateToken, (req, res) => {
   try {
     updateUserFunc(req, res);
   } catch (error) {

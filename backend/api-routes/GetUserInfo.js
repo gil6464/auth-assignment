@@ -1,6 +1,6 @@
 const express = require("express");
 const getUserInfo = express.Router();
-const getUserData = require("../utils/getUserData");
+const getUserData = require("../utils/GetUserData");
 
 getUserInfo.get("/", (req, res) => {
   try {
