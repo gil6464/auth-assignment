@@ -82,7 +82,7 @@ export default function SignInSide() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post("http://localhost:8080/login/", {
+      const { data } = await axios.post("http://3.235.160.86:8080/login/", {
         userName,
         password,
       });

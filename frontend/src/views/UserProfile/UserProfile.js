@@ -66,7 +66,7 @@ export default function UserProfile() {
     setLoading(true);
     if (userId) {
       axios
-        .get(`http://localhost:8080/getUserInfo/?id=${userId}`)
+        .get(`http://3.235.160.86:8080/getUserInfo/?id=${userId}`)
         .then(response => {
           setUserName(response.data.userName);
           setCompany(response.data.company);
@@ -139,7 +139,7 @@ export default function UserProfile() {
       return;
     }
     try {
-      await axios.patch("http://localhost:8080/updateUser", {
+      await axios.patch("http://3.235.160.86:8080/updateUser", {
         user,
       });
       setLoading(false);

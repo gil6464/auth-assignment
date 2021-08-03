@@ -111,7 +111,7 @@ export default function SignUp() {
     }
 
     try {
-      await axios.post("http://localhost:8080/signIn/", {
+      await axios.post("http://3.235.160.86:8080/signIn/", {
         user,
       });
       setRedirect(true);

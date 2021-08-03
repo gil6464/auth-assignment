@@ -59,7 +59,7 @@ export default function AdminNavbarLinks() {
   const handleCloseProfile = async () => {
     const refreshToken = Cookies.get("refreshToken");
     try {
-      await axios.delete("http://localhost:8080/logOut", {
+      await axios.delete("http://3.235.160.86:8080/logOut", {
         refreshToken,
       });
       Cookies.remove("token");
