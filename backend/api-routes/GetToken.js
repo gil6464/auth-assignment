@@ -11,4 +11,4 @@ getToken.post("/", (req, res) => {
   }
 });
 
-module.exports = getUserInfo;
+module.exports = getToken;
