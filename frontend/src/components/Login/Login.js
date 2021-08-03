@@ -11,7 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 //* For JWT Cookies
-import Cookies from "js-cookie";
+import Cookies, { set } from "js-cookie";
 
 import axios from "axios";
 //* Set the isLoggedIn state with redux;
@@ -62,21 +62,24 @@ export default function SignInSide() {
   const [password, setPassword] = useState();
   const [wrongPassword, setWrongPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const notifyWrong = () => {
+    toast.error("Wrong Password or user name", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
   //* If user correct in password and user name, the function set the right cookie and redirect to the right page.
 
   const login = async () => {
-    const notifyWrong = () => {
-      toast.error("Wrong Password or user name", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    };
+    setLoading(true);
+
     try {
       const { data } = await axios.post("http://localhost:8080/login/", {
         userName,
@@ -89,72 +92,88 @@ export default function SignInSide() {
       dispatch(logIn());
       dispatch(setUserId(data.userId));
       setRedirect(true);
+      setLoading(false);
     } catch (error) {
       setWrongPassword("Wrong Password or User Name, Check again!");
       notifyWrong();
+      setLoading(false);
     }
   };
   if (redirect) {
     return <Redirect to="/admin" />;
   }
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="User name"
-              name="User name"
-              autoComplete="email"
-              autoFocus
-              onChange={event => setUserName(event.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={event => setPassword(event.target.value)}
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={login}
-            >
-              Sign In
-            </Button>
-            {wrongPassword && <h4>{wrongPassword}</h4>}
-            <Grid container>
-              <Grid item xs></Grid>
-              <Grid item>
-                <Link href="/signUp" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Grid>
-    </Grid>
+    <div>
+      {loading ? (
+        <div class="loader">Loading...</div>
+      ) : (
+        <Grid container component="main" className={classes.root}>
+          <CssBaseline />
+          <Grid item xs={false} sm={4} md={7} className={classes.image} />
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={5}
+            component={Paper}
+            elevation={6}
+            square
+          >
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <form className={classes.form} noValidate>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="User name"
+                  name="User name"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={event => setUserName(event.target.value)}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={event => setPassword(event.target.value)}
+                />
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={login}
+                >
+                  Sign In
+                </Button>
+                {wrongPassword && <h4>{wrongPassword}</h4>}
+                <Grid container>
+                  <Grid item xs></Grid>
+                  <Grid item>
+                    <Link href="/signUp" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
+            </div>
+          </Grid>
+        </Grid>
+      )}
+    </div>
   );
 }

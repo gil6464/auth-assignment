@@ -11,8 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
-import { toast } from "react-toastify";
 
+//* Toastify
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // minified version is also included
 import "react-toastify/dist/ReactToastify.min.css";
@@ -50,6 +51,7 @@ export default function SignUp() {
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const notifyUserCreated = () => {
     toast.success("User Created!", {
@@ -63,7 +65,7 @@ export default function SignUp() {
     });
   };
   const notifyFieldsRequired = () => {
-    toast.error("All fields are required", {
+    toast.error("All fields are required!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -87,6 +89,7 @@ export default function SignUp() {
   const [redirect, setRedirect] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const user = {
       userName,
       password,
@@ -103,17 +106,20 @@ export default function SignUp() {
     if (!Object.keys(user).every(k => user[k])) {
       setError("All fields are required!");
       notifyFieldsRequired();
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/signIn/", {
+      await axios.post("http://localhost:8080/signIn/", {
         user,
       });
       setRedirect(true);
       notifyUserCreated();
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
       notifyTaken();
       setError("User Name or email is already in use, please change");
     }
@@ -122,142 +128,148 @@ export default function SignUp() {
     return <Redirect to="/" />;
   }
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
+    <div>
+      {loading ? (
+        <div class="loader">Loading...</div>
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                    onChange={e => setFirstName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                    onChange={e => setLastName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="User Name"
+                    label="User Name"
+                    name="User Name"
+                    onChange={e => setUserName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="Company"
+                    label="Company"
+                    name="Company"
+                    onChange={e => setCompany(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={e => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={e => setPassword(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="City"
+                    label="City"
+                    name="City"
+                    onChange={e => setCity(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="Country"
+                    label="Country"
+                    name="Country"
+                    onChange={e => setCountry(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="Postal Code"
+                    label="Postal Code"
+                    name="Postal Code"
+                    onChange={e => setPostalCode(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Button
                 fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                onChange={e => setFirstName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                onChange={e => setLastName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="User Name"
-                label="User Name"
-                name="User Name"
-                onChange={e => setUserName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="Company"
-                label="Company"
-                name="Company"
-                onChange={e => setCompany(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={e => setEmail(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={e => setPassword(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="City"
-                label="City"
-                name="City"
-                onChange={e => setCity(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="Country"
-                label="Country"
-                name="Country"
-                onChange={e => setCountry(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="Postal Code"
-                label="Postal Code"
-                name="Postal Code"
-                onChange={e => setPostalCode(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Sign Up
-          </Button>
-          {error && <h3>{error}</h3>}
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="/" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                Sign Up
+              </Button>
+              {error && <h3>{error}</h3>}
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="/" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        </Container>
+      )}
+    </div>
   );
 }
