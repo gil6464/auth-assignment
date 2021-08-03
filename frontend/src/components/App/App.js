@@ -1,11 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import SignUp from "../SignUp/SignUp";
 import axios from "axios";
 import Cookies from "js-cookie";
+
+import "./App.css";
 
 // core components
 import Admin from "layouts/Admin.js";
