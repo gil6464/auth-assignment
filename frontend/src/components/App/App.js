@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
-import { useSelector } from "react-redux";
+
+//* Log in with redux and local storage;
+import { useSelector, useDispatch } from "react-redux";
+import { logIn, setUserId } from "../../actions";
+
 import SignUp from "../SignUp/SignUp";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -61,7 +65,19 @@ async function getNewToken(refToken) {
     console.log(error);
   }
 }
-function App(props) {
+function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const isLogIn = localStorage.getItem("isLogIn");
+    const userId = localStorage.getItem("userId");
+
+    if (isLogIn && userId) {
+      dispatch(logIn());
+      dispatch(setUserId(userId));
+    }
+  }, []);
+
   const isLogged = useSelector(state => state.isLogged);
 
   return (

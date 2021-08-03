@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Cookies, { set } from "js-cookie";
 
 import axios from "axios";
+
 //* Set the isLoggedIn state with redux;
 import { useSelector, useDispatch } from "react-redux";
 import { logIn, setUserId } from "../../actions";
@@ -89,6 +90,8 @@ export default function SignInSide() {
       Cookies.set("token", data.accessToken);
       Cookies.set("refreshToken", data.newRefreshToken);
       setWrongPassword(false);
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("isLogIn", true);
       dispatch(logIn());
       dispatch(setUserId(data.userId));
       setRedirect(true);
