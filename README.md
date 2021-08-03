@@ -1,5 +1,7 @@
 # Auth assignment
 
+This is hosted at the AWS in the add http://3.235.160.86:8080/
+
 ## Run locally
 
 To run this app on your machine, navigate to auth-assignment/backend and create .env file,
