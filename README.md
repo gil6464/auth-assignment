@@ -1,6 +1,6 @@
 # Auth assignment
 
-This is hosted at the AWS in the add http://3.235.160.86:8080/
+This app is hosted at the AWS- http://3.235.160.86:8080/
 
 ## Run locally
 
