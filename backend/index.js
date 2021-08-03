@@ -24,11 +24,8 @@ app.use("/getUserInfo", getUserInfo);
 app.use("/getToken", getToken);
 
 app.get("*", (req, res) => {
-  console.log(path.join(__dirname, "/build/index.html"));
-
   return res.sendFile(path.join(__dirname + "/build/index.html"));
 });
-
 app.listen(PORT, () => {
   console.log("App listening on PORT: " + PORT);
 });
