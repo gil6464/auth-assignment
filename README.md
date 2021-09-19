@@ -1,6 +1,7 @@
 # Auth assignment
 
-This app is hosted at the AWS- http://3.235.160.86:8080/
+This project is made with React, Redux, Node, JWT and Bycrypt. 
+It is a practice for dive into an exist code-base and devlope users system at the Front-end. (Backend from scratch)
 
 ## Run locally
 
